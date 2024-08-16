@@ -16,10 +16,13 @@
 
 
  HOW TO RUN
- go build
- ./golang_api
+ 
+ **go build**
+ 
+ **./golang_api**
 
  HOW TO RUN UNIT TESTS
- go test -v 
+ 
+**go test -v**
 
  zis de posibile metode de a preveni atacuri etc.
