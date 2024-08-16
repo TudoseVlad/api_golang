@@ -12,12 +12,10 @@ import (
 	"time"
 )
 
+// mock auth folosind basic auth pt postman
+// unit teste
 func InitApi() {
-	srv := &http.Server{
-		Addr:    ":8080",
-		Handler: http.DefaultServeMux,
-	}
-	http.HandleFunc("/cuvinte", func(w http.ResponseWriter, r *http.Request) {
+	actionHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodPost:
 			POSTHandler(w, r)
@@ -27,6 +25,12 @@ func InitApi() {
 			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		}
 	})
+	authHandler := AuthMiddleware(actionHandler)
+	http.Handle("/cuvinte", authHandler)
+	srv := &http.Server{
+		Addr:    ":8080",
+		Handler: nil,
+	}
 	stopChan := make(chan os.Signal, 1)
 	signal.Notify(stopChan, os.Interrupt, syscall.SIGTERM)
 	// Start the server in a goroutine

@@ -5,13 +5,10 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 	"sync"
 )
 
-type info struct {
-	Cuvant   string
-	Aparitii int
-}
 type Store struct {
 	Date map[string]int
 	Mux  sync.Mutex
@@ -19,10 +16,13 @@ type Store struct {
 
 var values = Store{make(map[string]int), sync.Mutex{}}
 var sep = regexp.MustCompile(`[ \n,!?;.]`)
-var saveFile = "data.json"
+var saveFile = "src/info/data.json"
+var credentialeFile = "src/info/credentials.json"
+var credentiale = make(map[string]string)
+var counterPosts = 0
 
-func PutData(text string) {
-
+func StoreData(text string) {
+	counterPosts++
 	values.Mux.Lock()
 	cuvinte := sep.Split(text, -1)
 	for _, cuvant := range cuvinte {
@@ -37,11 +37,15 @@ func PutData(text string) {
 	}
 	fmt.Println(values.Date)
 	values.Mux.Unlock()
+	if counterPosts == 20 {
+		counterPosts = 0
+		DumpData()
+	}
 
 }
 
 func GetData(text string) map[string]int {
-	cuvinte := sep.Split(text, -1)
+	cuvinte := strings.Split(text, "_")
 	res := make(map[string]int)
 	for _, cuvant := range cuvinte {
 		if len(cuvant) > 0 {
@@ -68,6 +72,18 @@ func InitData() {
 		return
 	}
 
+	jsoncredentials, err := os.ReadFile(credentialeFile)
+	if err != nil {
+		fmt.Println("Error opening credentials file:", err)
+		return
+	}
+
+	err = json.Unmarshal(jsoncredentials, &credentiale)
+	if err != nil {
+		fmt.Println("Error unmarshalling credentails JSON:", err)
+		return
+	}
+
 }
 
 func DumpData() {
@@ -85,4 +101,13 @@ func DumpData() {
 
 	fmt.Println("JSON data written to file successfully!")
 	defer file.Close()
+}
+
+func CheckCredentials(username, password string) bool {
+	val, exists := credentiale[username]
+	if exists && val == password {
+		return true
+	}
+
+	return false
 }

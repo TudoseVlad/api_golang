@@ -14,7 +14,7 @@ func POSTHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to read body", http.StatusInternalServerError)
 		return
 	}
-	data.PutData(string(body))
+	data.StoreData(string(body))
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
 	json.NewEncoder(w).Encode(map[string]string{"message": "Number saved successfully"})
