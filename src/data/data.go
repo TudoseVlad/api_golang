@@ -18,7 +18,7 @@ var values = Store{make(map[string]int), sync.Mutex{}}
 var sep = regexp.MustCompile(`[ \n,!?;.]`)
 var saveFile = "src/info/data.json"
 var credentialeFile = "src/info/credentials.json"
-var credentiale = make(map[string]string)
+var credentiale = make(map[string]int)
 var counterPosts = 0
 
 func StoreData(text string) {
@@ -35,7 +35,6 @@ func StoreData(text string) {
 			}
 		}
 	}
-	fmt.Println(values.Date)
 	values.Mux.Unlock()
 	if counterPosts == 20 {
 		counterPosts = 0
@@ -103,11 +102,15 @@ func DumpData() {
 	defer file.Close()
 }
 
-func CheckCredentials(username, password string) bool {
-	val, exists := credentiale[username]
-	if exists && val == password {
-		return true
-	}
+func CheckCredentials(credentails string) bool {
+	_, exists := credentiale[credentails]
+	return exists
+}
 
-	return false
+func GetValue(name string) int {
+	val, exists := values.Date[name]
+	if exists {
+		return val
+	}
+	return 0
 }

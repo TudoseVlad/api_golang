@@ -16,8 +16,10 @@
 
 
  HOW TO RUN
- go mod init golang_api
  go build
  ./golang_api
- 
+
+ HOW TO RUN UNIT TESTS
+ go test -v 
+
  zis de posibile metode de a preveni atacuri etc.

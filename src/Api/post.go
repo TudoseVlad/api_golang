@@ -17,5 +17,5 @@ func POSTHandler(w http.ResponseWriter, r *http.Request) {
 	data.StoreData(string(body))
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusCreated)
-	json.NewEncoder(w).Encode(map[string]string{"message": "Number saved successfully"})
+	json.NewEncoder(w).Encode(map[string]string{"message": "Words saved successfully"})
 }
