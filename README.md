@@ -25,4 +25,12 @@
  
 **go test -v**
 
- zis de posibile metode de a preveni atacuri etc.
+**FUTURE IMPROVEMENTS**
+- Creating a variable that decides if we use the HMTL or the gRPC protocol and implement the infrastructure necessary to handle the gRPC communication
+- Creating a thread manager that remembers the sequence in which commands are given, in order to parallelize the tasks, for we can have mupltiple POSTs where which we can process in at the same time splitting the data and then sending it to the main thread where we will put all of it in the memory
+- Enabling multiple ways of authentication, or only the basic one
+- Creating protections against attacks:
+  * restricting which users cand POST data and creating multiple tiers of user privileges
+  * remembering the amount of requests one user has made in last seconds, limiting the amount of commands one user can do
+  * Sanitizing the input to ensure that the format is respected, eliminating in the process any commands that may be given to interfere
+  * Using services such as CloudFlare that after deployment would ensure DDOS protection and providing us with a web application firewall
